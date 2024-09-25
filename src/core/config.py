@@ -5,14 +5,18 @@ from pydantic_settings import BaseSettings
 
 
 class DBSettings(BaseSettings):
-    pg_host: str = Field("postgres", env="POSTGRES_HOST")
+    pg_host: str = Field("0.0.0.0", env="POSTGRES_HOST")
     pg_port: str = Field(8000, env="POSTGRES_PORT")
-    pg_db: str = Field("postgres", env="POSTGRES_DB")
+    pg_db: str = Field("db", env="POSTGRES_DB")
     pg_user: str = Field("postgres", env="POSTGRES_USER")
     pg_password: str = Field("postgres", env="POSTGRES_PASSWORD")
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    url: Optional[PostgresDsn] = None
+    echo: bool = False,
+    echo_pool: bool = False,
+    pool_size: int = 50,
+    max_overflow: int = 10,
 
-    @field_validator("SQLALCHEMY_DATABASE_URI", mode='before')
+    @field_validator("url", mode='before')
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
@@ -39,7 +43,7 @@ class Settings(BaseSettings):
     project_name: str = 'Warehouse API'
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
-    # db: DBSettings = DBSettings()
+    db: DBSettings
 
     class Config:
         case_sensitive = True
