@@ -1,7 +1,15 @@
-from typing import AsyncGenerator, Optional
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 
+from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine, AsyncSession
 from src.core.config import settings
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await db_helper.dispose()
 
 
 class DatabaseHelper:

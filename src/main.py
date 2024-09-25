@@ -2,9 +2,11 @@ import uvicorn
 from fastapi import FastAPI
 from api import router as api_router
 from core.config import settings
+from db.session import lifespan
 
 app = FastAPI(
-    title=settings.project_name
+    title=settings.project_name,
+    lifespan=lifespan,
 )
 app.include_router(
     api_router,
