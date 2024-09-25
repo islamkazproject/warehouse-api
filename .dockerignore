@@ -1,0 +1,27 @@
+#python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+#virtual env
+.venv/
+.env
+venv/
+
+#docs
+README.md
+LICENSE
+
+#IDE cache
+.DS_Store
+.idea/
+
+#Tests and logs
+tests/
+*.log
+
+#gitignore
+.gitignore
+docker-compose.yml
+Dockerfile
