@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from api import router as api_router
 from core.config import settings
 from db.session import lifespan
@@ -7,10 +8,10 @@ from db.session import lifespan
 app = FastAPI(
     title=settings.project_name,
     lifespan=lifespan,
+    default_response_class=ORJSONResponse,
 )
 app.include_router(
     api_router,
-    prefix=settings.api.prefix,
 )
 
 if __name__ == '__main__':
