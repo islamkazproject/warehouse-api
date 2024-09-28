@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Product
-from core.schemas import ProductCreate
+from core.schemas import ProductCreate, ProductRetrieve, ProductUpdate
 
 
 async def list_products(
@@ -22,6 +22,16 @@ async def retrieve_product(
     statement = select(Product).filter_by(id=product_id)
     result = await session.scalars(statement)
     return result.first()
+
+
+async def update_product(
+    product: ProductUpdate,
+    db_product,
+) -> Product:
+    for key, value in product.dict(exclude_unset=True).items():
+        setattr(db_product, key, value)
+
+    return db_product
 
 
 async def create_product(
