@@ -25,13 +25,18 @@ async def retrieve_product(
 
 
 async def update_product(
-    product: ProductUpdate,
-    db_product,
+    session: AsyncSession,
+    product_id: int,
+    product: ProductUpdate
 ) -> Product:
-    for key, value in product.dict(exclude_unset=True).items():
-        setattr(db_product, key, value)
+    statement = select(Product).filter_by(id=product_id)
+    result = await session.scalars(statement)
+    updated_product = result.first()
 
-    return db_product
+    for key, value in product.dict(exclude_unset=True).items():
+        setattr(updated_product, key, value)
+
+    return updated_product
 
 
 async def create_product(

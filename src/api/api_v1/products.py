@@ -66,14 +66,12 @@ async def put_update_product(
         Depends(db_helper.session_getter),
     ],
     product_id: int,
-    product: ProductUpdate,
+    product: ProductUpdate
 ) -> Product:
-    db_product = await retrieve_product(session=session, product_id=product_id)
+    updated_product = await update_product(session=session, product_id=product_id, product=product)
 
-    if not db_product:
+    if not updated_product:
         raise HTTPException(status_code=404, detail="Product not found")
-
-    updated_product = await update_product(product, db_product)
 
     await session.commit()
     return updated_product
