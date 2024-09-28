@@ -9,15 +9,11 @@ __all__ = [
     'ProductUpdate',
 ]
 
-from .products import (
-    ProductCreate,
-    ProductRetrieve,
-    ProductUpdate,
-)
 from .orders import (
     OrderCreate,
     OrderItemBase,
     OrderItemResponse,
     OrderResponse,
-    OrderStatus,
+    OrderStatus
 )
+from .products import ProductCreate, ProductRetrieve, ProductUpdate

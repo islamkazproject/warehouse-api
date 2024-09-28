@@ -2,11 +2,9 @@ import enum
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import text, ForeignKey, Enum as SQLAEnum
-from sqlalchemy.orm import (
-    Mapped,
-    mapped_column, relationship
-)
+from sqlalchemy import Enum as SQLAEnum
+from sqlalchemy import ForeignKey, text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models import Base, Product
 

@@ -4,11 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Product
-from core.schemas import (
-    ProductCreate,
-    ProductRetrieve,
-    ProductUpdate,
-)
+from core.schemas import ProductCreate, ProductRetrieve, ProductUpdate
 from crud.products import (
     create_product,
     list_products,

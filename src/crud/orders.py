@@ -5,11 +5,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from core.models import Order, Product, OrderItem
-from core.schemas import (
-    OrderCreate,
-)
-from core.schemas.orders import OrderStatusUpdate, OrderStatus
+from core.models import Order, OrderItem, Product
+from core.schemas import OrderCreate
+from core.schemas.orders import OrderStatus
 
 
 async def list_orders(
