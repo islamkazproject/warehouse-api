@@ -7,8 +7,8 @@ from core.models import Product
 from core.schemas import ProductCreate, ProductRetrieve, ProductUpdate
 from crud.products import (
     create_product,
-    list_products,
-    retrieve_product,
+    get_products,
+    get_product,
     update_product
 )
 from db.session import db_helper
@@ -23,7 +23,7 @@ async def get_list_products(
         Depends(db_helper.session_getter),
     ]
 ):
-    products = await list_products(session=session)
+    products = await get_products(session=session)
     return products
 
 
@@ -35,7 +35,7 @@ async def get_retrieve_product(
     ],
     product_id: int
 ):
-    product = await retrieve_product(session=session, product_id=product_id)
+    product = await get_product(session=session, product_id=product_id)
 
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")

@@ -7,7 +7,7 @@ from core.models import Product
 from core.schemas import ProductCreate, ProductRetrieve, ProductUpdate
 
 
-async def list_products(
+async def get_products(
     session: AsyncSession,
 ) -> Sequence[Product]:
     statement = select(Product).order_by(Product.id)
@@ -15,7 +15,7 @@ async def list_products(
     return result.all()
 
 
-async def retrieve_product(
+async def get_product(
     session: AsyncSession,
     product_id: int
 ) -> Product:
