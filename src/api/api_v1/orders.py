@@ -7,9 +7,9 @@ from core.models import Order
 from core.schemas import OrderCreate, OrderResponse, OrderStatus
 from crud.orders import (
     create_order,
-    list_orders,
-    retrieve_order,
-    updated_order_status
+    get_orders,
+    get_order,
+    update_order_status
 )
 from db.session import db_helper
 
@@ -23,7 +23,7 @@ async def get_list_orders(
         Depends(db_helper.session_getter),
     ]
 ) -> Sequence[Order]:
-    orders = await list_orders(session=session)
+    orders = await get_orders(session=session)
     return orders
 
 
@@ -35,7 +35,7 @@ async def get_retrieve_order(
     ],
     order_id: int
 ) -> Order:
-    order = await retrieve_order(session=session, order_id=order_id)
+    order = await get_order(session=session, order_id=order_id)
     return order
 
 
@@ -47,12 +47,14 @@ async def post_create_order(
     ],
     order_create: OrderCreate,
 ) -> Order:
-    order = await create_order(session=session, order_create=order_create)
-
-    session.add(order)
-    await session.commit()
-    await session.refresh(order)
-    return order
+    try:
+        order = await create_order(session=session, order_create=order_create)
+        session.add(order)
+        await session.commit()
+        await session.refresh(order)
+        return order
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.patch("/{order_id}/status", response_model=OrderResponse)
@@ -63,11 +65,14 @@ async def patch_order_status(
     ],
     order_id: int,
     status: OrderStatus
-):
-    updated_order = await updated_order_status(session=session, order_id=order_id, status=status)
-    if not updated_order:
-        raise HTTPException(status_code=404, detail="Order not found")
+) -> Order:
+    try:
+        updated_order = await update_order_status(session=session, order_id=order_id, status=status)
 
-    await session.commit()
-    await session.refresh(updated_order)
-    return updated_order
+        if not updated_order:
+            raise HTTPException(status_code=404, detail="Order not found")
+
+        await session.refresh(updated_order)
+        return updated_order
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
