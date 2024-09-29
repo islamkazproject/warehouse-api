@@ -1,5 +1,6 @@
 from typing import List
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,5 +16,8 @@ async def check_product_availability(
         statement = select(Product).filter_by(id=item.product_id)
         product = (await session.execute(statement)).scalars().first()
 
-        if not product or product.quantity < item.quantity:
-            raise ValueError(f"Not enough stock for product ID {item.product_id}")
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Product ID {item.product_id} not found")
+
+        if product.quantity < item.quantity:
+            raise HTTPException(status_code=400, detail=f"Not enough stock for product ID {item.product_id}")
