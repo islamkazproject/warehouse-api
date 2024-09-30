@@ -36,6 +36,8 @@ async def update_product(
     for key, value in product.dict(exclude_unset=True).items():
         setattr(updated_product, key, value)
 
+    await session.commit()
+    await session.refresh(updated_product)
     return updated_product
 
 

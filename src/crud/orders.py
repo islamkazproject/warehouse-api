@@ -1,5 +1,6 @@
 from typing import Sequence
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -47,6 +48,9 @@ async def create_order(
     order = Order()
     order.items.extend(order_items_list)
 
+    session.add(order)
+    await session.commit()
+    await session.refresh(order)
     return order
 
 
@@ -58,7 +62,12 @@ async def update_order_status(
     statement = select(Order).filter_by(id=order_id)
     order = (await session.execute(statement)).scalars().first()
 
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
     if order.status != status:
         order.status = status.name
 
+    await session.commit()
+    await session.refresh(order)
     return order

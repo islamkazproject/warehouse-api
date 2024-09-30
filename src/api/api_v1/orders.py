@@ -49,9 +49,6 @@ async def post_create_order(
 ) -> Order:
     try:
         order = await create_order(session=session, order_create=order_create)
-        session.add(order)
-        await session.commit()
-        await session.refresh(order)
         return order
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -68,11 +65,6 @@ async def patch_order_status(
 ) -> Order:
     try:
         updated_order = await update_order_status(session=session, order_id=order_id, status=status)
-
-        if not updated_order:
-            raise HTTPException(status_code=404, detail="Order not found")
-
-        await session.refresh(updated_order)
         return updated_order
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")

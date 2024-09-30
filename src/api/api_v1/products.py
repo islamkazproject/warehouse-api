@@ -72,7 +72,6 @@ async def put_update_product(
     if not updated_product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    await session.commit()
     return updated_product
 
 
