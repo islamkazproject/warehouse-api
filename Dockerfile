@@ -4,6 +4,7 @@ LABEL authors="islam"
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+
 WORKDIR /warehouse-api
 
 RUN apt-get update && \
@@ -16,6 +17,8 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-root --no-interaction --no-ansi --with dev
 
 COPY src ./src
+
+ENV PYTHONPATH=/warehouse-api/src
 
 WORKDIR /warehouse-api/src
 
