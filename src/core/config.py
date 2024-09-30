@@ -1,3 +1,5 @@
+import os
+
 from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -47,4 +49,21 @@ class Settings(BaseSettings):
     db: DBHelper
 
 
-settings = Settings()
+class TestSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file='.env.test',
+        env_nested_delimiter='__',
+        env_prefix='API_CONFIG__',
+        case_sensitive=False,
+    )
+
+    project_name: str = 'Warehouse API'
+    run: RunConfig = RunConfig()
+    api: ApiPrefix = ApiPrefix()
+    db: DBHelper
+
+
+if os.getenv("ENV") == "test":
+    settings = TestSettings()
+else:
+    settings = Settings()
