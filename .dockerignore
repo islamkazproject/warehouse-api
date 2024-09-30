@@ -5,6 +5,8 @@ __pycache__/
 .pytest_cache/
 
 #virtual env
+test_db.env
+.env.test
 .venv/
 .env
 venv/
